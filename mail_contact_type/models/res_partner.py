@@ -1,6 +1,7 @@
 # Copyright 2023 Foodles (https://www.foodles.com/)
 # @author Pierre Verkest <pierreverkest84@gmail.com>
 # @author Matthias Barkat <matthias.barkat@foodles.co>
+# @author Alexandre Galdeano <alexandre.galdeano@foodles.co>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 from odoo import fields, models
 
@@ -32,3 +33,17 @@ class ResPartner(models.Model):
                 for contact in self._find_contacts_by_mail_contact_types(codes)
             ]
         )
+
+    def _get_name(self):
+        partner = self
+        name = super()._get_name()
+
+        if (
+            not self._context.get("show_mail_contact_types")
+            or not partner.mail_contact_type_ids
+        ):
+            return name
+
+        mail_contact_types_str = ", ".join(partner.mail_contact_type_ids.mapped("name"))
+
+        return f"{name} ({mail_contact_types_str})"

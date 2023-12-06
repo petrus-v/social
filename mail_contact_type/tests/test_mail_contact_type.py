@@ -1,6 +1,7 @@
 # Copyright 2022 Foodles (http://www.foodles.co).
 # @author Pierre Verkest <pierreverkest84@gmail.com>
-# @author Matthias BARKAT <matthias.barkat@foodles.co>
+# @author Matthias Barkat <matthias.barkat@foodles.co>
+# @author Alexandre Galdeano <alexandre.galdeano@foodles.co>
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo.tests.common import SavepointCase
@@ -136,4 +137,30 @@ class TestMailContactType(SavepointCase):
         self.assertEqual(
             self.main_partner.contact_by_types("invoice", "sale"),
             f"{self.partner1.id},{self.partner2.id},{self.partner4.id},{self.main_partner.id}",
+        )
+
+    def test_get_name(self):
+        self.assertEqual(
+            self.main_partner._get_name(),
+            "The company",
+        )
+        self.assertEqual(
+            self.main_partner.with_context(show_mail_contact_types=True)._get_name(),
+            "The company (Invoice)",
+        )
+        self.assertEqual(
+            self.partner1.with_context(show_mail_contact_types=True)._get_name(),
+            "The company, partner1 (Invoice)",
+        )
+        self.assertEqual(
+            self.partner2.with_context(show_mail_contact_types=True)._get_name(),
+            "The company, partner2 (Sale)",
+        )
+        self.assertEqual(
+            self.partner3.with_context(show_mail_contact_types=True)._get_name(),
+            "The company, partner3 (Purchase)",
+        )
+        self.assertEqual(
+            self.partner4.with_context(show_mail_contact_types=True)._get_name(),
+            "The company, partner4 (Invoice, Sale)",
         )
