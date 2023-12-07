@@ -15,9 +15,11 @@
     "depends": [
         "contacts",
         "mail",
+        "base_view_inheritance_extension",
     ],
     "data": [
         "security/ir.model.access.csv",
+        "views/mail_compose_message_view.xml",
         "views/mail_contact_type.xml",
         "views/res_partner.xml",
         "views/menu.xml",

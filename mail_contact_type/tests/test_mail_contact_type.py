@@ -164,3 +164,38 @@ class TestMailContactType(SavepointCase):
             self.partner4.with_context(show_mail_contact_types=True)._get_name(),
             "The company, partner4 (Invoice, Sale)",
         )
+
+    def test_name_search_by_contact_type(self):
+        self.assertEqual(
+            self.env["res.partner"]
+            .with_context(show_mail_contact_types=True)
+            .name_search(name="Invoice"),
+            [
+                (self.main_partner.id, "The company (Invoice)"),
+                (self.partner1.id, "The company, partner1 (Invoice)"),
+                (self.partner4.id, "The company, partner4 (Invoice, Sale)"),
+            ],
+        )
+
+    def test_name_search_by_contact_type_insensitive_case(self):
+        self.assertEqual(
+            self.env["res.partner"]
+            .with_context(show_mail_contact_types=True)
+            .name_search(name="invoice"),
+            [
+                (self.main_partner.id, "The company (Invoice)"),
+                (self.partner1.id, "The company, partner1 (Invoice)"),
+                (self.partner4.id, "The company, partner4 (Invoice, Sale)"),
+            ],
+        )
+
+    def test_name_search_by_contact_type_partial_type_name(self):
+        self.assertEqual(
+            self.env["res.partner"]
+            .with_context(show_mail_contact_types=True)
+            .name_search(name="invo"),
+            [],
+        )
+
+    def test_name_search_by_contact_type_without_show_mail_contact_types_context(self):
+        self.assertEqual(self.env["res.partner"].name_search(name="invoice"), [])
